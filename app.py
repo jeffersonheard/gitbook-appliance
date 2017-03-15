@@ -3,6 +3,7 @@ from collections import OrderedDict
 from flask import Flask, render_template, request, send_from_directory, redirect, flash
 from urllib.parse import urlparse
 from git import Repo
+from markdown import markdown
 import json
 import os
 import re
@@ -93,7 +94,7 @@ class Book(object):
             self._editions = []
 
             for entry in os.scandir(self.book_path):
-                is_book_json = re.match(r'book\.([A-Za-z0-9\-\_]).json', entry.name)
+                is_book_json = re.match(r'book\.([A-Za-z0-9\-\_]+).json', entry.name)
                 if is_book_json:
                     edition_name = is_book_json.group(1)
                     with open(entry.path) as config:
@@ -274,6 +275,13 @@ def delete_book(book):
     return redirect('/')
 
 
+@app.route("/readme/<book>")
+def readme(book):
+    b = Book(book)
+    with open(os.path.join(b.book_path, 'README.md')) as readme:
+        return render_template('show-readme.template.html', readme_body=markdown(readme.read().split('???')[0]))
+
+
 @app.route("/book/<book>/<edition>/<path:filename>")
 def browse_book(book, edition, filename):
     b = Book(book)
@@ -306,6 +314,7 @@ def list_logs(book):
 def download_log_file(book, filename):
     b = Book(book)
     return send_from_directory(os.path.join(b.book_path, 'logs'), filename)
+
 
 
 if __name__ == "__main__":
