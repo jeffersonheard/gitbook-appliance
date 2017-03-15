@@ -1,0 +1,49 @@
+{% extends "bootstrap-base.html" %}
+{% block body %}
+<div class="container">
+    <div class="page-header">
+        <h1>GitBook Listing</h1>
+        <p class="lead">GitBook Appliance v{{version}}</p>
+    </div>
+
+    {% include 'flashed-messages.partial.html' %}
+
+    <div class="panel panel-default">
+    <div class="panel-body">
+            <form class='form' action="/create" method="POST">
+                <div class="form-group">
+                    <label for="name">New Book Name</label>
+                    <input type="text" class='form-control' name="name" id="name" placeholder="New book name">
+                </div>
+                <input type="submit" class='btn btn-primary' value="Create new GitBook">
+
+            </form>
+        </div>
+    </div>
+
+
+    <div class="row">
+        {% for book in books %}
+        <div class="col-md-12">
+            <h3>{{ book.name }}</h3>
+            <p><b>Last Commit: </b> {{ book.last_updated }}</p>
+            {% if book.is_building %}<p><b>Currently building</b></p>{% endif %}
+            <p><b>Git Clone: </b></p>
+            <pre>git clone git@{{ hostname }}:{{ book.name }}</pre>
+
+            {% for edition in book.editions %}
+            <h4>{{ edition.name }} edition</h4>
+            <ul>
+                <li><a href="{{ edition.read_url }}"><i class="glyphicon glyphicon-book"></i> Read Online</a></li>
+                <li><a href="{{ edition.html_download_url }}"><i class="glyphicon glyphicon-download"></i> Download Zipped HTML</a></li>
+                <li><a href="{{ edition.pdf_download_url }}"><i class="glyphicon glyphicon-download"></i> Download PDF</a></li>
+                <li><a href="{{ edition.epub_download_url }}"><i class="glyphicon glyphicon-download"></i> Download ePub</a></li>
+                <li><a href="{{ edition.mobi_download_url }}"><i class="glyphicon glyphicon-download"></i> Download Mobi</a></li>
+                <li><a href="{{ edition.log_url }}"><i class="glyphicon glyphicon-list-alt"></i> Build Logs</a></li>
+            </ul>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

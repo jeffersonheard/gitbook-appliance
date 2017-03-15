@@ -1,0 +1,25 @@
+{% extends "bootstrap-base.html" %}
+{% block body %}
+<div class="container">
+    <div class="page-header">
+        <h1>GitBook Build Logs</h1>
+        <h2>{{ book }}</h2>
+        <p class="lead">GitBook Appliance v{{version}}</p>
+        <p><a href="/"><i class="glyphicon glyphicon-arrow-left"></i> Back to Book List</a></p>
+    </div>
+
+    {% include 'flashed-messages.partial.html' %}
+
+    <ul>
+        {% for edition in logs %}
+            <h4>{{ edition }}</h4>
+            <ul>
+                {% for log, err in logs[edition] %}
+                <li><a href="/logs/{{book}}/{{ log.name }}">Log <span class="label label-primary">({{ log.stat().st_size|filesizeformat }})</span> <span class="label label-success">{{ log|mtime }}</span> </a> //
+                    <a href="/logs/{{book}}/{{ err.name }}">Error <span class="label label-primary">({{ err.stat().st_size|filesizeformat }})</span> <span class="label label-success">{{ err|mtime }}</span> </a></li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
