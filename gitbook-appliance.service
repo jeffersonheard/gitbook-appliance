@@ -1,0 +1,12 @@
+[Unit]
+Description=GitBook Appliance Service
+After=network-online.target 
+
+[Service]
+WorkingDirectory=/home/gitbook/gitbook-appliance
+User=gitbook
+ExecStart=/usr/bin/python3 app.py 
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

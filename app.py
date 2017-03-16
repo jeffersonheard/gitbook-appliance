@@ -23,7 +23,7 @@ app.config['IS_BUILDING'] = {}
 app.secret_key = '12345'
 
 class BuildFailed(Exception):
-    def __abs__(self, edition, exc, start_time):
+    def __init__(self, edition, exc, start_time):
         self.exc = exc
         self.edition = edition
         self.start_time = start_time
