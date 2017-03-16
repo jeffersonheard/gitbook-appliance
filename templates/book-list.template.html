@@ -29,7 +29,7 @@
             <p><b>Last Commit: </b> {{ book.last_updated }}</p>
             {% if book.is_building %}<p><b>Currently building</b></p>{% endif %}
             <p><b>Git Clone: </b></p>
-            <pre>git clone git@{{ hostname }}:{{ book.name }}</pre>
+            <pre>git clone http://{{ hostname }}:8888/git/{{ book.name }}</pre>
 
             {% for edition in book.editions %}
             <h4>{{ edition.name }} edition</h4>

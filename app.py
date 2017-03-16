@@ -13,13 +13,14 @@ from slugify import slugify
 
 app = Flask(__name__)
 app.debug = True
-app.config['DEFAULT_PROTOTYPE'] = '/Users/jeff/Projects/gitbook-prototypes/gitbook-prototype.git'
-app.config['REPO_HOME'] = '/Users/jeff/Projects/gitbook-repos'
-app.config['BOOK_HOME'] = '/Users/jeff/Projects/gitbook-books'
+app.config['DEFAULT_PROTOTYPE'] = '/home/gitbook/gitbook-prototypes/gitbook-prototype.git'
+app.config['REPO_HOME'] = '/home/gitbook/book-repos'
+app.config['BOOK_HOME'] = '/home/gitbook/gitbook-books'
 app.config['VERSION'] = '1.2'
 app.config['GITBOOK_WORKERS'] = 2
 app.config['GITBOOK_BUILD_TIMEOUT'] = 5
 app.config['IS_BUILDING'] = {}
+app.secret_key = '12345'
 
 class BuildFailed(Exception):
     def __abs__(self, edition, exc, start_time):
@@ -241,14 +242,14 @@ def mtime(direntry):
 def index():
     hostname = urlparse(request.url).hostname
 
-    with os.scandir(app.config['REPO_HOME']) as entries:
-        books = (Book(repo.name) for repo in entries if repo.is_dir() and repo.name[0] != '.')
-        return render_template(
-            'book-list.template.html',
-            books=books,
-            hostname=hostname,
-            version=app.config['VERSION']
-        )
+    entries = os.scandir(app.config['REPO_HOME'])
+    books = (Book(repo.name) for repo in entries if repo.is_dir() and repo.name[0] != '.')
+    return render_template(
+        'book-list.template.html',
+        books=books,
+        hostname=hostname,
+        version=app.config['VERSION']
+    )
 
 
 @app.route("/create", methods=['POST'])
