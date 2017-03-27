@@ -19,3 +19,4 @@ Unidecode==0.4.20
 watchdog==0.8.3
 Werkzeug==0.12
 wheel==0.24.0
+markdown==2.6.8

@@ -27,7 +27,7 @@
         <div class="col-md-12">
             <h3>{{ book.name }}</h3>
             <p><b>Last Commit: </b> {{ book.last_updated }}</p>
-            {% if book.is_building %}<p><b>Currently building</b></p>{% endif %}
+            {% if book.is_building %}<p><b>Build in Progress</b></p>{% endif %}
             <p><b>Git Clone: </b></p>
             <pre>git clone git@{{ hostname }}:{{ book.name }}</pre>
 

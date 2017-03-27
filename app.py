@@ -138,6 +138,8 @@ class Edition(object):
 
         with open(logfile, 'w') as out:
             with open(errfile, 'w') as err:
+                build_marker = open('/tmp/{}.build'.format(self.name), 'w')
+                build_marker.close()
                 try:
                     sh2 = sh(_out=out, _err=err)
 
@@ -181,10 +183,11 @@ class Edition(object):
                     raise BuildFailed(self, e, start)
                 finally:
                     os.chdir(cwd)
+                os.unlink('/tmp/{}.build'.format(self.name))
 
     @property
     def is_building(self):
-        return os.path.exists('/tmp/{}'.format(self.name))
+        return os.path.exists('/tmp/{}.build'.format(self.name))
 
     @property
     def read_url(self):
