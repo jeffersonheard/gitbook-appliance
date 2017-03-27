@@ -87,7 +87,7 @@ class Book(object):
 
     @property
     def is_building(self):
-        return app.config['IS_BUILDING'].get(self.name, False)
+        return os.path.exists('/tmp/{}.build'.format(self.name))
 
     @property
     def editions(self):
@@ -149,7 +149,7 @@ class Edition(object):
 
                     print("removing old files")
                     sh2.rm('-rf', os.path.join('public', self.name))
-                    sh2.cp('book.{}.json'.format(self.name), 'book.json')
+                    sh2.cp('book.{}.json'.format(self.book.name), 'book.json')
 
                     print("Refreshing gitbook installation")
                     sh2.gitbook('install')
@@ -184,11 +184,11 @@ class Edition(object):
                     raise BuildFailed(self, e, start)
                 finally:
                     os.chdir(cwd)
-                os.unlink('/tmp/{}.build'.format(self.name))
+                os.unlink('/tmp/{}.build'.format(self.book.name))
 
     @property
     def is_building(self):
-        return os.path.exists('/tmp/{}.build'.format(self.name))
+        return os.path.exists('/tmp/{}.build'.format(self.book.name))
 
     @property
     def read_url(self):
