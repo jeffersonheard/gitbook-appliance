@@ -13,6 +13,15 @@ class BookBuildingEventHandler(FileSystemEventHandler):
 
         self.book_name_index = len(app.config['REPO_HOME'].split(os.path.sep))  # name of the book should be the first dir under the repo home
         self.last_modification_time = {}
+        for d in os.scandir(app.config['REPO_HOME']):
+            dirname = d.name
+            if not dirname.startswith('.'):
+                if '.git' in dirname:
+                    dirname = dirname.rsplit('.git', 1)[0]
+                if not os.path.exists(os.path.join(app.config['BOOK_HOME'], dirname, 'public')):
+                    print("No build found yet for {}, building".format(dirname))
+                    self.last_modification_time[dirname] = time.time()
+                            
 
     def on_any_event(self, event):
         print(event)
@@ -32,7 +41,6 @@ class BookBuildingEventHandler(FileSystemEventHandler):
                     print("Done!")
                 except BuildFailed as e:
                     print(e)
-                del app.config['IS_BUILDING'][name]
 
         for book, t in [x for x in self.last_modification_time.items()]:
             if now - t > app.config['GITBOOK_BUILD_TIMEOUT']:  # if it's been more than 5 seconds
@@ -46,6 +54,8 @@ bbeh = BookBuildingEventHandler()
 observer = Observer()
 observer.schedule(bbeh, app.config['REPO_HOME'], recursive=True)
 observer.start()
+
+
 
 try:
     while True:

@@ -1,0 +1,12 @@
+[Unit]
+Description=GitBook Builder Service
+After=network.target
+
+[Service]
+WorkingDirectory=/home/gitbook/gitbook-appliance
+User=gitbook
+ExecStart=/usr/bin/python3 builder.py 
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
