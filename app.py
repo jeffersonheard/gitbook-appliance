@@ -139,7 +139,7 @@ class Edition(object):
 
         with open(logfile, 'w') as out:
             with open(errfile, 'w') as err:
-                build_marker = open('/tmp/{}.build'.format(self.name), 'w')
+                build_marker = open('/tmp/{}.build'.format(self.book.name), 'w')
                 build_marker.close()
                 try:
                     sh2 = sh(_out=out, _err=err)
